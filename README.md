@@ -52,12 +52,12 @@ curl -X POST http://localhost:5099/reports \
 
 ## Endpoints
 
-| Method | Route | What it does |
-|---|---|---|
-| `POST` | `/ingest` | Download BTC/ETH data into the database |
-| `GET`  | `/assets` | List assets and how many candles each has |
-| `GET`  | `/candles?symbol=BTC&limit=10` | View the raw price data |
-| `POST` | `/reports` | Analyze and create the PDF report |
+| Method | Route                          | What it does                              |
+| ------ | ------------------------------ | ----------------------------------------- |
+| `POST` | `/ingest`                      | Download BTC/ETH data into the database   |
+| `GET`  | `/assets`                      | List assets and how many candles each has |
+| `GET`  | `/candles?symbol=BTC&limit=10` | View the raw price data                   |
+| `POST` | `/reports`                     | Analyze and create the PDF report         |
 
 ## Look at the database
 
@@ -88,12 +88,3 @@ dotnet test
 
 - Database connection: `src/CryptoAnalysis.Api/appsettings.json` (`ConnectionStrings:Postgres`). Change `Username` to match your PostgreSQL user.
 - CoinGecko API key: `appsettings.Development.json` (`CoinGecko:ApiKey`). A demo key is already set.
-
-## Note about the data
-
-On the free CoinGecko plan, `days=180` returns about 45 candles per coin (one candle every 4 days), not 180 daily candles. This is real data and is enough for the analysis.
-
-## If something breaks
-
-- **Database connection fails**: check `brew services list`, then make sure `Username` in `appsettings.json` matches your PostgreSQL user (`psql -l` shows your databases).
-- **`/reports` says no data**: run `POST /ingest` first.
