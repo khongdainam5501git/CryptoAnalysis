@@ -1,0 +1,9 @@
+{
+  "dotnet.defaultSolution": "CryptoAnalysis.sln",
+  "editor.formatOnSave": true,
+  "omnisharp.enableEditorConfigSupport": true,
+  "files.exclude": {
+    "**/bin": true,
+    "**/obj": true
+  }
+}

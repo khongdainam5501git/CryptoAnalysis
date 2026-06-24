@@ -1,0 +1,32 @@
+%% Модель данных: 3 таблицы
+erDiagram
+    ASSET ||--o{ CANDLE : "has"
+    ASSET ||--o{ METRIC : "has"
+
+    ASSET {
+        int      Id PK
+        string   Symbol  "BTC / ETH (unique)"
+        string   Name    "Bitcoin / Ethereum"
+        string   CoinGeckoId "bitcoin / ethereum"
+        decimal  MarketCap "nullable"
+    }
+
+    CANDLE {
+        long     Id PK
+        int      AssetId FK
+        datetime Ts       "UTC, day open"
+        decimal  Open
+        decimal  High
+        decimal  Low
+        decimal  Close
+        decimal  Volume
+    }
+
+    METRIC {
+        long     Id PK
+        int      AssetId FK "nullable for pair-level"
+        string   Type     "volatility | correlation"
+        string   Period   "daily | weekly | monthly"
+        double   Value
+        datetime ComputedAt
+    }

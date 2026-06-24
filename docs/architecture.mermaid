@@ -1,0 +1,35 @@
+%% Архитектура системы: 6 логических модулей
+flowchart TB
+    subgraph EXT["Внешние источники"]
+        CG["CoinGecko API\n/coins/{id}/ohlc\n/coins/{id}/market_chart"]
+    end
+
+    subgraph API["CryptoAnalysis.Api (ASP.NET Core 10)"]
+        CTRL["1. Web API + Swagger\nIngestion / Reports / CandlesController"]
+    end
+
+    subgraph CORE["CryptoAnalysis.Core (class library)"]
+        ING["2. Ingestion\nCoinGeckoClient + IngestionService"]
+        DATA["3. Data\nCryptoDbContext + Entities"]
+        STATS["4. Analytics\nReturns + AnalysisService"]
+        CHART["5. Charts\nScottPlot -> PNG"]
+        REP["6. Reports\nQuestPDF -> PDF"]
+    end
+
+    subgraph DB["PostgreSQL (local)"]
+        T1[("asset")]
+        T2[("candle")]
+        T3[("metric")]
+    end
+
+    CG -->|OHLC + volume| ING
+    CTRL -->|trigger seed| ING
+    ING -->|insert, skip dup| DATA
+    DATA --- DB
+    STATS -->|read candles| DATA
+    STATS -->|write metrics| DATA
+    CHART -->|read candles| DATA
+    REP --> STATS
+    REP --> CHART
+    CTRL -->|POST /reports| REP
+    REP -->|PDF byte[]| CTRL

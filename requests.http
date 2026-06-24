@@ -1,0 +1,19 @@
+@host = http://localhost:5099
+
+### Ingest OHLCV for BTC + ETH into the DB
+POST {{host}}/ingest
+Content-Type: application/json
+
+{ "assets": ["BTC", "ETH"], "days": 180 }
+
+### List assets + candle count
+GET {{host}}/assets
+
+### Latest OHLCV data for BTC
+GET {{host}}/candles?symbol=BTC&limit=10&order=desc
+
+### Generate the PDF report
+POST {{host}}/reports
+Content-Type: application/json
+
+{ "assets": ["BTC", "ETH"] }

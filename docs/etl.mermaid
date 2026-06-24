@@ -1,0 +1,17 @@
+%% ETL: Extract -> Transform -> Load
+flowchart LR
+    subgraph E["Extract"]
+        E1["CoinGeckoClient\nGET /coins/bitcoin/ohlc?days=180\nGET /coins/ethereum/ohlc?days=180\n+ /market_chart (volume)"]
+    end
+    subgraph T["Transform"]
+        T1["Parse JSON -> RawCandle\n(ts, o, h, l, c)"]
+        T2["Join volume by day\n(truncate to UTC date)"]
+        T3["Map -> Candle entity\nset AssetId"]
+    end
+    subgraph L["Load"]
+        L1["IngestionService\nskip dup by (AssetId, Ts)"]
+        L2[("PostgreSQL\ncandle")]
+    end
+
+    E1 --> T1 --> T2 --> T3 --> L1 --> L2
+    L1 -.->|"exists -> skip"| L1
